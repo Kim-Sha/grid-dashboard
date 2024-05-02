@@ -305,3 +305,4 @@ with col[2]:
     with st.expander('Control Panel', expanded=True):
         st.toggle('Toggle Smart Scheduling')
         st.button('Customize Schedule', use_container_width=True, disabled=False)
+        st.write("Need help? Contact [support](https://docs.streamlit.io/)!")
