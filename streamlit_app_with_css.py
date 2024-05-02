@@ -69,6 +69,27 @@ st.markdown("""
 # Load data
 df_reshaped = pd.read_csv('data/us-population-2010-2019-reshaped.csv')
 
+df = pd.read_parquet('./data/smart_plug_energy_use.parquet')
+
+# fucking with the data
+df_before = df[df.date < '2024-04-20']
+df_before['date'] = df_before['date'] + pd.Timedelta('10D20H')
+df_after = df[df.date > '2024-04-28']
+# Join before/after traces
+df_concat = pd.concat([df_before, df_after])
+# Raw consumption plot by device
+fig_raw = px.bar(df_concat.groupby([pd.Grouper(key='date', freq='H'), 'source']).kwh.sum().reset_index(),
+                 x='date', y='kwh', color='source',
+                 labels = {'kwh':'Energy Use (kWh)', 'source':'Source', 'date':'Date'})
+
+# More massaging the data
+df_concat = df_concat.groupby([pd.Grouper(key='date', freq='1H')]).kwh.sum().reset_index()
+df_concat['schedule'] = df_concat.kwh.copy()
+df_concat.loc[df_concat.date.dt.hour.between(0, 5), 'schedule'] = 0
+df_concat = df_concat.rename(columns={'kwh':'Regular', 'schedule': 'Schedule'})
+df_concat = df_concat.melt(id_vars=['date'], value_vars=['Regular', 'Schedule'])
+# Allowing spline interpolation even for scheduled periods
+df_concat = df_concat[~((df_concat.variable=='Regular')&(df_concat.date.dt.hour.between(0, 5))&(df_concat.date > '2024-04-29 12:00:00'))]
 
 #######################
 # Sidebar
@@ -87,6 +108,14 @@ with st.sidebar:
 
 #######################
 # Plots
+
+# Smoothed total energy consumption comparison plot
+fig = px.line(df_concat.groupby([pd.Grouper(key='date', freq='1H'), 'variable']).value.sum().reset_index(),
+              x='date', y='value', color='variable', line_shape='spline', height=500,
+              color_discrete_sequence=['red', 'green'],
+              title='Total Energy Use',
+              labels={'kwh': 'Energy Use (kWh)', 'date':'Date', 'variable':'', 'value': 'Energy Use (kWh)'})
+fig['data'][1]['line']['dash'] = 'dash'
 
 # Heatmap
 def make_heatmap(input_df, input_y, input_x, input_color, input_color_theme):
@@ -240,13 +269,16 @@ with col[0]:
         st.altair_chart(donut_chart_less)
 
 with col[1]:
-    st.markdown('#### Total Population')
+    st.markdown('#### Summary of Energy Consumption')
+
+    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig_raw, use_container_width=True)
     
-    choropleth = make_choropleth(df_selected_year, 'states_code', 'population', selected_color_theme)
-    st.plotly_chart(choropleth, use_container_width=True)
+    # choropleth = make_choropleth(df_selected_year, 'states_code', 'population', selected_color_theme)
+    # st.plotly_chart(choropleth, use_container_width=True)
     
-    heatmap = make_heatmap(df_reshaped, 'year', 'states', 'population', selected_color_theme)
-    st.altair_chart(heatmap, use_container_width=True)
+    # heatmap = make_heatmap(df_reshaped, 'year', 'states', 'population', selected_color_theme)
+    # st.altair_chart(heatmap, use_container_width=True)
     
 
 with col[2]:
