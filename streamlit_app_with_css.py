@@ -9,7 +9,7 @@ import plotly.express as px
 # Page configuration
 st.set_page_config(
     page_title="GRID: Plug Load Management",
-    page_icon="🏂",
+    page_icon="logo.png",
     layout="wide",
     initial_sidebar_state="collapsed")
 
@@ -235,7 +235,7 @@ with col[0]:
 
     if selected_year > 2010:
         last_state_name = "kWh Saved"
-        last_state_population = "$4.53"
+        last_state_population = "4.53"
         last_state_delta = "4.53"
     else:
         last_state_name = '-'
