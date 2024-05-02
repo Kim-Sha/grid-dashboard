@@ -8,10 +8,10 @@ import plotly.express as px
 #######################
 # Page configuration
 st.set_page_config(
-    page_title="US Population Dashboard",
+    page_title="GRID: Plug Load Management",
     page_icon="🏂",
     layout="wide",
-    initial_sidebar_state="expanded")
+    initial_sidebar_state="collapsed")
 
 alt.themes.enable("dark")
 
@@ -80,6 +80,7 @@ df_concat = pd.concat([df_before, df_after])
 # Raw consumption plot by device
 fig_raw = px.bar(df_concat.groupby([pd.Grouper(key='date', freq='H'), 'source']).kwh.sum().reset_index(),
                  x='date', y='kwh', color='source',
+                 title='Raw Energy Consumption Feed',
                  labels = {'kwh':'Energy Use (kWh)', 'source':'Source', 'date':'Date'})
 
 # More massaging the data
@@ -94,7 +95,7 @@ df_concat = df_concat[~((df_concat.variable=='Regular')&(df_concat.date.dt.hour.
 #######################
 # Sidebar
 with st.sidebar:
-    st.title('🏂 US Population Dashboard')
+    st.title('🏂 GRID: Plug Load Management')
     
     year_list = list(df_reshaped.year.unique())[::-1]
     
@@ -110,12 +111,13 @@ with st.sidebar:
 # Plots
 
 # Smoothed total energy consumption comparison plot
-fig = px.line(df_concat.groupby([pd.Grouper(key='date', freq='1H'), 'variable']).value.sum().reset_index(),
-              x='date', y='value', color='variable', line_shape='spline', height=500,
-              color_discrete_sequence=['red', 'green'],
+fig = px.line(df_concat.groupby([pd.Grouper(key='date', freq='1H'), 'variable']).value.sum().reset_index()\
+                       .sort_values(by=['variable', 'date'], ascending=[False, True]),
+              x='date', y='value', color='variable', line_shape='spline',# height=500,
+              color_discrete_sequence=['limegreen', 'orangered'],
               title='Total Energy Use',
               labels={'kwh': 'Energy Use (kWh)', 'date':'Date', 'variable':'', 'value': 'Energy Use (kWh)'})
-fig['data'][1]['line']['dash'] = 'dash'
+fig['data'][0]['line']['dash'] = 'dash'
 
 # Heatmap
 def make_heatmap(input_df, input_y, input_x, input_color, input_color_theme):
