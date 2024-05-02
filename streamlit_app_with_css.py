@@ -217,14 +217,14 @@ def calculate_population_difference(input_df, input_year):
 col = st.columns((1.5, 4.5, 2), gap='medium')
 
 with col[0]:
-    st.markdown('#### Gains/Losses')
-
+    st.markdown('#### Savings')
+    
     df_population_difference_sorted = calculate_population_difference(df_reshaped, selected_year)
-
+    
     if selected_year > 2010:
-        first_state_name = df_population_difference_sorted.states.iloc[0]
-        first_state_population = format_number(df_population_difference_sorted.population.iloc[0])
-        first_state_delta = format_number(df_population_difference_sorted.population_difference.iloc[0])
+        first_state_name = "Money Saved"
+        first_state_population = "$1.31"
+        first_state_delta = "1.31"
     else:
         first_state_name = '-'
         first_state_population = '-'
@@ -232,15 +232,15 @@ with col[0]:
     st.metric(label=first_state_name, value=first_state_population, delta=first_state_delta)
 
     if selected_year > 2010:
-        last_state_name = df_population_difference_sorted.states.iloc[-1]
-        last_state_population = format_number(df_population_difference_sorted.population.iloc[-1])   
-        last_state_delta = format_number(df_population_difference_sorted.population_difference.iloc[-1])   
+        last_state_name = "kWh Saved"
+        last_state_population = "$4.53"
+        last_state_delta = "4.53"
     else:
         last_state_name = '-'
         last_state_population = '-'
         last_state_delta = ''
     st.metric(label=last_state_name, value=last_state_population, delta=last_state_delta)
-
+    
     
     st.markdown('#### States Migration')
 
