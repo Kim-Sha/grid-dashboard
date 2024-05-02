@@ -295,7 +295,7 @@ with col[1]:
     
 
 with col[2]:
-    st.markdown('#### Top States')
+    st.markdown('#### Your Devices')
 
     st.dataframe(df_selected_year_sorted,
                  column_order=("states", "population"),
@@ -303,10 +303,10 @@ with col[2]:
                  width=None,
                  column_config={
                     "states": st.column_config.TextColumn(
-                        "States",
+                        "Device",
                     ),
                     "population": st.column_config.ProgressColumn(
-                        "Population",
+                        "Usage (kWh)",
                         format="%f",
                         min_value=0,
                         max_value=max(df_selected_year_sorted.population),
