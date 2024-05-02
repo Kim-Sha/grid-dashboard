@@ -244,7 +244,7 @@ with col[0]:
     st.metric(label=last_state_name, value=last_state_population, delta=last_state_delta)
     
     
-    st.markdown('#### States Migration')
+    st.markdown('#### System Stats')
 
     if selected_year > 2010:
         # Filter states with population difference > 50000
@@ -255,20 +255,29 @@ with col[0]:
         # % of States with population difference > 50000
         states_migration_greater = round((len(df_greater_50000)/df_population_difference_sorted.states.nunique())*100)
         states_migration_less = round((len(df_less_50000)/df_population_difference_sorted.states.nunique())*100)
-        donut_chart_greater = make_donut(states_migration_greater, 'Inbound Migration', 'green')
-        donut_chart_less = make_donut(states_migration_less, 'Outbound Migration', 'red')
+        donut_chart_greater = make_donut(29, 'Inbound Migration', 'green')
+        donut_chart_less = make_donut(18, 'Outbound Migration', 'blue')
+        donut_chart_less1 = make_donut(99.9, 'Outbound Migration', 'orange')
     else:
         states_migration_greater = 0
         states_migration_less = 0
-        donut_chart_greater = make_donut(states_migration_greater, 'Inbound Migration', 'green')
-        donut_chart_less = make_donut(states_migration_less, 'Outbound Migration', 'red')
+        donut_chart_greater = make_donut(29, 'Inbound Migration', 'blue')
+        donut_chart_less = make_donut(1, 'Outbound Migration', 'green')
+        donut_chart_less = make_donut(1, 'Outbound Migration', 'green')
 
     migrations_col = st.columns((0.2, 1, 0.2))
     with migrations_col[1]:
-        st.write('Inbound')
+        st.write('Percent Time Offline')
         st.altair_chart(donut_chart_greater)
-        st.write('Outbound')
+        st.write('Percent Energy Saved')
         st.altair_chart(donut_chart_less)
+        st.write('System Uptime')
+        st.altair_chart(donut_chart_less1)
+        #st.metric(label="kWh Projected", value=551, delta=+8,
+        #delta_color="normal")
+
+        #st.metric(label="Money Projected", value="$160", delta=+2,
+        #delta_color="normal")
 
 with col[1]:
     st.markdown('#### Summary of Energy Consumption')
