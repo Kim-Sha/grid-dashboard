@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import plotly.express as px
+import datetime
 
 #######################
 # Page configuration
@@ -311,7 +312,20 @@ with col[2]:
                      )}
                  )
     
+
+    
+
     with st.expander('Control Panel', expanded=True):
         st.toggle('Toggle Smart Scheduling')
-        st.button('Customize Schedule', use_container_width=True, disabled=False)
+        #def time_input():
+        #    t = st.time_input("Start Time", datetime.time(21, 00))
+        #    t1 = st.time_input("End Time", datetime.time(7, 00))
+        #st.button('Customize Schedule', use_container_width=True, disabled=False)
+
+        if st.button("Customize Schedule", use_container_width=True):
+            t = st.time_input("Start Time", datetime.time(21, 00))
+            t1 = st.time_input("End Time", datetime.time(7, 00))
+        
+
         st.write("Need help? Contact [support](https://docs.streamlit.io/)!")
+        
