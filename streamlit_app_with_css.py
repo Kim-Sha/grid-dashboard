@@ -96,7 +96,8 @@ df_concat = df_concat[~((df_concat.variable=='Regular')&(df_concat.date.dt.hour.
 #######################
 # Sidebar
 with st.sidebar:
-    st.title('🏂 GRID: Plug Load Management')
+    st.image('logo.png')
+    st.title('GRID: Plug Load Management')
     
     year_list = list(df_reshaped.year.unique())[::-1]
     
@@ -104,8 +105,8 @@ with st.sidebar:
     df_selected_year = df_reshaped[df_reshaped.year == selected_year]
     df_selected_year_sorted = df_selected_year.sort_values(by="population", ascending=False)
 
-    color_theme_list = ['blues', 'cividis', 'greens', 'inferno', 'magma', 'plasma', 'reds', 'rainbow', 'turbo', 'viridis']
-    selected_color_theme = st.selectbox('Select a color theme', color_theme_list)
+    color_theme_list = ['Bloomberg', 'Tata', 'Verizon']
+    selected_color_theme = st.selectbox('Select a facility', color_theme_list)
 
 
 #######################
